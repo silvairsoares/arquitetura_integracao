@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd">
+    <db:mysql-config name="MySQL_Configuration" doc:name="MySQL Configuration" url="127.0.0.1"/>
+    <http:listener-config name="HTTP_Listener_Configuration" host="0.0.0.0" port="8081" doc:name="HTTP Listener Configuration"/>
+    <flow name="ObterNoticias_GET">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="noticia/" allowedMethods="GET" doc:name="HTTP"/>
+        <logger message="#[message.inboundProperties.'http.uri.params'.rm]" level="INFO" doc:name="Logger"/>
+        <db:select config-ref="MySQL_Configuration" doc:name="BdCRM">
+            <db:parameterized-query><![CDATA[select * from NOTICIAS]]></db:parameterized-query>
+        </db:select>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+    </flow>
+    <flow name="CadastrarNoticias_POST">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="noticia/" allowedMethods="POST" doc:name="HTTP">
+            <http:response-builder statusCode="200"/>
+        </http:listener>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+        <db:insert config-ref="MySQL_Configuration" doc:name="BdCRM">
+            <db:parameterized-query><![CDATA[insert into NOTICIAS (titulo, autor, data, conteudo) values (
+	#[message.payload.titulo],
+	#[message.payload.autor],
+	#[message.payload.data],
+	#[message.payload.conteudo]
+);]]></db:parameterized-query>
+        </db:insert>
+        <logger message="#[message.inboundProperties.'http.uri.params'.rm]" level="INFO" doc:name="Logger"/>
+    </flow>
+</mule>
