@@ -11,8 +11,7 @@ Alunos:
 - Rafael Gonzaga
 - Silvair Leite Soares
 
-**Esquema de funcionamento geral da integração**
-
+**Blueprint com o esquema de funcionamento geral da integração**
 
 ![Funcionamento ESB e ETL](https://i.imgur.com/kabP7gY.jpg "Funcionamento ESB e ETL")
 
