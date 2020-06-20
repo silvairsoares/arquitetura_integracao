@@ -15,3 +15,7 @@ Alunos:
 
 
 ![Funcionamento ESB e ETL](https://i.imgur.com/kabP7gY.jpg "Funcionamento ESB e ETL")
+
+
+**Print do ESB construído com o Mule Anypoint Studio**
+![Funcionamento ESB e ETL](https://i.imgur.com/XPPAgr6.jpg "Funcionamento ESB e ETL")
